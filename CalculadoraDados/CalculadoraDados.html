@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Dados</title>
+</head>
+
+<style>
+
+body{
+  font: normal 15px calibri;
+  color: rgb(63, 63, 63);
+  background-color: rgb(134, 173, 255);
+  text-align: center;
+  
+}
+
+section{
+  font: normal 20px calibri;
+  background-color: rgb(255, 255, 255);
+  padding-top: 20px;
+  margin: auto;
+  width: 300px;
+  height: auto;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.267);
+}
+
+div#alerta{
+  height: 300px;
+  width: 450px;
+  background-color: white;
+  text-align: center;
+  border-radius: 20px;
+}
+
+div#nova{
+  text-align: justify;
+  margin: 10px;
+  margin-bottom: 10px;
+  font:normal 18px calibri;
+  color:rgb(68, 68, 68);
+ margin-left: 20px;
+}
+
+div#lista{
+  
+  background-color: rgba(255, 255, 255, 0.425);
+  border-radius: 10px;
+  width: 300px;
+  height: auto;
+  margin:auto;
+  margin-top: 20px;
+  padding-bottom: 10px;
+  
+}
+
+div#teste{
+  text-align: left;
+  width: 300px;
+  margin: auto;
+  background-color: white;
+  border-radius: 10px;
+
+}
+
+input{
+  font: normal 20px calibri;
+  background-color: rgb(228, 228, 228);
+  border-radius: 5px;
+  border-width: 0px;
+  height: 30px;
+  text-align: left;
+  display:inline-block;
+  margin: 5px;
+  width:80px
+  
+}
+
+input#multi{
+  width: 70px;
+  text-align: center;
+}
+
+input.bot{
+  margin: 10px;
+  height: 40px;
+  width: 100px;
+  font: bold 20px calibri;
+  color: rgb(80, 80, 80);
+  text-align: center;
+}
+
+hr{
+  width: 270px;
+  border-color: white;
+}
+</style>
+<body>
+<br>
+  <h1>Dados</h1>
+  <section id="sec">
+    <div id="primo">
+      <label><b>Dado 1:</b></label> 
+      <input 
+      type="number" 
+      id="entrada" 
+      class="d" 
+      onkeydown="entra()"
+      >
+<br><b>Frequência:</b> 
+     <input
+     type="number"
+    id="multi"
+    value = "1"
+    min="0"
+    max="999999999"
+    >
+  
+    </div>
+    <br>
+<hr>
+  <input 
+    type="button" 
+    id="calc" 
+    class="bot" 
+    onclick="calcula()" 
+    value="Calcular" 
+    onmouseenter="escuro()" 
+    onmouseout="claro()"
+  >
+  <input 
+    type="button" 
+    id="ins" 
+    class="bot" 
+    onclick="Insere()" 
+    value="Inserir" 
+    onmouseenter="escuro2()" 
+    onmouseout="claro2()"
+  > 
+
+  </section>
+<div id="lista"><br>
+ <b>Lista de dados</b><br><br>
+  </div>
+  <div id="teste"></div>
+  
+<script>
+  "use strict"
+  var calc = document.getElementById('calc') //Declara o botão CALCULAR como variável
+  var ins = document.getElementById('ins')  //Declara o botão INSERIR como variável
+  var entrada = document.getElementById('entrada') //Declara a entrada de valores de dados como variável
+  entrada.focus() //Move o cursor para a entrada de valores
+  addEventListener('keypress', function(evento){ //Inicia sensibilidade ao evento de pressionar teclas e declara a função EVENTO
+    if (evento.key === "Enter") { //Se o evento for pressionar a tecla ENTER -->>
+        evento.preventDefault() //Cancela o evento se for cancelável, sem parar a propagação do mesmo
+        document.getElementById('ins').click() //-->> O botão inserir é pressionado automaticamente
+    }
+  })
+  var contador = 0  //Inicia um contador para enumerar e controlar os índices, valores, rotulos e listas que apareçerão
+  var vetor = [] //Define um vetor vazio. Será usado para guardar os valores inseridos. (VETOR PRINCIPAL)
+  var banco = [] //Define um vetor vazio. Guarda os valores processados durante a equação
+  var frequencia = [] //Define um vetor vazio. Guarda a quantidade de vezes que cada velor é inserido.
+  function Insere(){ //Define a função Insere(), que irá filtrar, organizar e pré-processar os valores no vetor VETOR PRINCIPAL
+  var teste = document.getElementById('teste')
+  var multi = document.getElementById('multi') //Declara a entrada de frequencia de ocorrência de dados como variável
+  var m = Number(multi.value) //Define o valor da entrada de frequencia como um dado de tipo número inteiro
+
+  if (entrada.value == null || entrada.value == '' || m == 0){ //Se o valor da entrada for nulo OU o se for uma string vazia -->
+    alert('Por favor, insira um valor.') // --> Emite um alerta
+    entrada.focus() //Move o cursor para a entrada de valores
+  }else{ // Caso o contrário
+    entrada.focus()//Move o cursor para a entrada de valores
+    var rotulo = document.getElementsByTagName('label')[0] // Define o mostrador de dados "DADOS 1" como variável
+    var lista = document.getElementById('lista') // Define a div "Lista" como variável
+
+      var p = 0 // Inicia uma variável "p" como contador simples
+      while(p < m){ // Enquanto p for menor do que a frequencia de dados inserida -->
+      p++ // p irá incrementar ele mesmo + 1
+      vetor.push(Number.parseFloat(entrada.value)) // Parseia o valor do campo entrada - Numero flutuante, e insere este valor no VETOR PRINCIPAL quantas vezes for determinado na frequencia.
+      }
+
+   //Insere as frequencias no vetor "frequencia" para processamento de dados
+    frequencia.push(m)
+
+    //Cria um elemento DIV como uma variável
+    var nova = document.createElement('div') 
+    nova.setAttribute('id', 'nova') //Define a id da DIV como "nova"
+    nova.setAttribute('backgroundColor', 'white')// Define o fundo da DIV nova como cor branca
+    lista.appendChild(nova)// Anexa a DIV nova dentro da DIV Lista
+
+    //document.getElementById('nova')//Seleciona a DIV nova para futura ação
+    nova.innerHTML = `Dado ${contador+1}: <b>${entrada.value}</b> &nbsp x &nbsp <b>${m}</b><br>`//Altera o HTML da DIV nova
+    contador++// Incrementa o valor da variável contador como: contador = contador+1
+    rotulo.innerHTML = `<b>Dado ${contador+1}:</b>`//Altera o HTML de rótulo, o mostrador e contador de dados a serem inseridos
+    vetor.sort(function(x,y){return x-y})//Organiza o vetor baseado em função de subtração, do menor para o maior.
+    entrada.value = ''//Limpa o campo entrada, com a string vazia ''
+    multi.value = 1 // Define o campo de frequência para 1 novamente
+    calc.value = 'Calcular'
+  }
+}
+
+var soma = 0
+var Dn = 0
+var somaDn = 0
+var Dp = 0
+var variancia = 0
+var somaFreq = 0
+
+function calcula(){
+
+  if (vetor.length === 0 && entrada.value === ''){
+  alert('Insira valores')
+  }else if(soma == 0){
+    for(let c = 0; c < vetor.length; c++){
+    soma += vetor[c]
+  }
+    for(let c = 0; c < frequencia.length; c++){
+    somaFreq += frequencia[c]
+  }
+    var media = soma/somaFreq
+    for(let c = 0; c < vetor.length; c++){
+    Dn = (vetor[c] - media)**2
+    banco.push(Dn)
+  }
+    for(let c = 0; c < vetor.length; c++){
+    somaDn += banco[c]
+  }
+    variancia = somaDn / (vetor.length)
+    Dp = Math.sqrt(variancia)
+    calc.value = 'Limpar'
+    //nova.innerHTML=""
+    lista.innerHTML = 
+        `<per><br>
+        <b>Dados organizados:</b> ${vetor}<br><br>
+        <b>Amplitude:</b> ${vetor[vetor.length-1]-vetor[0]}<br><br>
+        <b>Soma:</b> ${soma}<br><br>
+        <b>Média:</b> ${media.toFixed(2)}<br><br>
+        <b>Variância:</b> ${variancia.toFixed(2)}<br><br>
+        <b>Desvio Padrão:</b> ${Dp}<br><br>
+        `
+  }else{
+/*
+     teste.innerHTML = ''
+     contador = 0
+     calc.value = 'Calcular'
+     soma = 0
+     Dn = 0
+     somaDn = 0
+     Dp = 0
+     variancia = 0
+     somaFreq = 0
+     contador = 0
+     vetor = []
+     banco = []
+     frequencia = []
+     lista.innerHTML = `<br><b>Lista de dados</b><br><br>`
+     rotulo.innerHTML = `<b>Dado ${contador+1}:</b>`
+*/
+    self.location.reload()
+
+  }
+}
+  function escuro(){
+    calc.style.backgroundColor = 'grey'
+  }
+  function claro(){
+    calc.style.backgroundColor = 'lightgrey'
+  }
+  function escuro2(){
+    ins.style.backgroundColor = 'grey'
+  }
+  function claro2(){
+    ins.style.backgroundColor = 'lightgrey'
+  }
+
+  
+</script>
+
+</body>
+</html>
